@@ -34,6 +34,7 @@ export class RideService {
 
 
   bookRide(data: any) {
+    
     const token = localStorage.getItem('token');
 
     return this.http.post(

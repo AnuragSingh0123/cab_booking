@@ -54,6 +54,7 @@ export class RideSuccess implements OnInit, OnDestroy {
 
   updateRide() {
     const ride = this.activeRide();
+    
 
     if (!ride) return;
 

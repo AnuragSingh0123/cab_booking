@@ -235,12 +235,17 @@ app.get("/user/booking/:id", async (req, res) => {
     }
 
     let driver = null;
+    let dropLocation = ''
+
 
     if (booking.driverId) {
       const driverDetails = await Driver.findOne({
         userId: booking.driverId
       });
 
+      const bookingDetails = await Booking.findOne({_id : booking});
+
+      dropLocation = bookingDetails.drop;
       const userDetails = await User.findById(
         booking.driverId
       ).select("-password");
@@ -258,7 +263,8 @@ app.get("/user/booking/:id", async (req, res) => {
 
     res.json({
       booking,
-      driver
+      driver,
+      dropLocation
     });
 
   } catch (err) {
