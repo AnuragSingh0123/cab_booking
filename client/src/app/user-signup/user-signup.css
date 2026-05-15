@@ -1,0 +1,152 @@
+.signup-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    box-sizing: border-box;
+}
+
+.signup-form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.signup-card {
+    position: relative;
+    width: 100%;
+    max-width: 760px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: white;
+}
+
+.driver-card {
+    top: -20px;
+}
+
+.signup-header {
+    text-align: center;
+    margin-bottom: 2px;
+}
+
+.signup-title {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 800;
+    color: #111;
+    letter-spacing: 0.5px;
+    line-height: 1.1;
+}
+
+.signup-subtitle {
+    margin-top: 4px;
+    font-size: 13px;
+    color: #666;
+}
+
+.signup-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.full-width {
+    grid-column: span 2;
+}
+
+.form-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #222;
+}
+
+.form-input {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #d9d9d9;
+    border-radius: 12px;
+    background: #f7f7f7;
+    outline: none;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: 0.2s ease;
+}
+
+.form-input:focus {
+    border-color: black;
+    background: white;
+}
+
+.error-text {
+    font-size: 12px;
+    color: red;
+}
+
+.signup-btn {
+    width: 100%;
+    margin-top: 4px;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #000, #2e2e2e);
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s ease;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.signup-btn:hover {
+    transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+    .full-width {
+        grid-column: span 1;
+    }
+}
+
+
+.address-container {
+    position: relative;
+}
+
+.suggestions-dropdown {
+    position: absolute;
+    top: 100%; /* Directly below the input */
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.suggestions-dropdown li {
+    padding: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+}
+
+.suggestions-dropdown li:hover {
+    background-color: #f8f9fa;
+    color: #007bff;
+}
+

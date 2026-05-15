@@ -1,0 +1,169 @@
+<div class="signup-wrapper">
+
+    <form
+        [formGroup]="signUpForm"
+        (ngSubmit)="signup()"
+        class="signup-form"
+    >
+
+        <div class="signup-card">
+
+            <!-- Heading -->
+            <div class="signup-header">
+
+                <h1 class="signup-title">
+                    Sign Up
+                </h1>
+
+                <p class="signup-subtitle">
+                    Create your account to continue
+                </p>
+
+            </div>
+
+            <!-- Grid -->
+            <div class="signup-grid">
+
+                <!-- Name -->
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Full Name
+                    </label>
+
+                    <input
+                        class="form-input"
+                        formControlName="name"
+                        type="text"
+                        placeholder="Enter your Name"
+                    >
+
+                    @if(signUpForm.get('name')?.touched && signUpForm.get('name')?.invalid){
+
+                        <small class="error-text">
+
+                            @if(signUpForm.get('name')?.errors?.['required']){
+                                Name is required
+                            }
+
+                            @if(signUpForm.get('name')?.errors?.['minlength']){
+                                Minimum 3 characters required
+                            }
+
+                        </small>
+
+                    }
+
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Email Address
+                    </label>
+
+                    <input
+                        class="form-input"
+                        formControlName="email"
+                        type="email"
+                        placeholder="Enter your email"
+                    >
+
+                    @if(signUpForm.get('email')?.touched && signUpForm.get('email')?.invalid){
+
+                        <small class="error-text">
+
+                            @if(signUpForm.get('email')?.errors?.['required']){
+                                Email is required
+                            }
+
+                            @if(signUpForm.get('email')?.errors?.['email']){
+                                Enter valid email
+                            }
+
+                        </small>
+
+                    }
+
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Password
+                    </label>
+
+                    <input
+                        class="form-input"
+                        formControlName="password"
+                        type="password"
+                        placeholder="Enter your password"
+                    >
+
+                    @if(signUpForm.get('password')?.touched && signUpForm.get('password')?.invalid){
+
+                        <small class="error-text">
+
+                            @if(signUpForm.get('password')?.errors?.['required']){
+                                Password is required
+                            }
+
+                            @if(signUpForm.get('password')?.errors?.['minlength']){
+                                Minimum 6 characters required
+                            }
+
+                        </small>
+
+                    }
+
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Confirm Password
+                    </label>
+
+                    <input
+                        class="form-input"
+                        formControlName="confirmPassword"
+                        type="password"
+                        placeholder="Confirm your password"
+                    >
+
+                    @if(signUpForm.get('confirmPassword')?.touched && signUpForm.get('confirmPassword')?.invalid){
+
+                        <small class="error-text">
+                            Confirm password is required
+                        </small>
+
+                    }
+
+                    @if(
+                        signUpForm.get('confirmPassword')?.touched &&
+                        signUpForm.get('password')?.value !== signUpForm.get('confirmPassword')?.value
+                    ){
+
+                        <small class="error-text">
+                            Passwords do not match
+                        </small>
+
+                    }
+
+                </div>
+
+            </div>
+
+            <!-- Button -->
+            <button class="signup-btn">
+                Continue
+            </button>
+
+        </div>
+
+    </form>
+
+</div>

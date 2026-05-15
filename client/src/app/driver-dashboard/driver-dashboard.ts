@@ -25,15 +25,6 @@ export class DriverDashboard implements OnInit, OnDestroy {
   activeRide = signal<any | null>(null);
   availableRide = signal<any | null>(null);
 
-  getAverageRating(): number {
-    const list = this.reviews();
-
-    if (!list.length) return 0;
-
-    const total = list.reduce((sum, r) => sum + r.rating, 0);
-    return total / list.length;
-  }
-
   driver = signal({
     id: '',
     name: '',
@@ -66,6 +57,16 @@ export class DriverDashboard implements OnInit, OnDestroy {
     this.sub?.unsubscribe();
   }
 
+  getAverageRating(): number {
+    const list = this.reviews();
+
+    if (!list.length) return 0;
+
+    const total = list.reduce((sum, r) => sum + r.rating, 0);
+
+    return total / list.length;
+  }
+
   loadUser() {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
 
@@ -77,57 +78,22 @@ export class DriverDashboard implements OnInit, OnDestroy {
     }));
   }
 
-  // refresh() {
-  //   this.driverService.getDriverDashboard().subscribe({
-  //     next: (data: any) => {
-  //       this.reviews.set(data.reviews ?? []);
-
-  //       this.activeRide.set(data.activeRide ?? null);
-
-  //       if (availableRide && this.driver().vehicle && availableRide.vehicle && this.driver().vehicle.toLowerCase() === availableRide.vehicle.toLowerCase()
-  //       ) {
-  //         this.availableRide.set(availableRide);
-  //       } 
-  //       else {
-  //         this.availableRide.set(null);
-  //       }
-
-  //       this.activeRide.set(data?.activeRide ?? null);
-
-  //       this.driver.update(d => ({
-  //         ...d,
-  //         vehicle: data?.driver?.vehicleType ?? '',
-  //         vehicleNo: data?.driver?.vehicleNumber ?? '',
-  //         rating: data?.driver?.rating ?? 0,
-  //         online: data?.driver?.online ?? true
-  //       }));
-
-  //       this.stats.set({
-  //         trips: data.stats?.trips ?? 0,
-  //         earnings: data.stats?.earnings ?? 0,
-  //         distance: data.stats?.distance ?? 0,
-  //         hours: data.stats?.hours ?? 0,
-  //       });
-  //     },
-
-  //     error: err => {
-  //       console.log('Dashboard Error', err);
-  //     },
-  //   });
-  // }
-
-    refresh() {
+  refresh() {
     this.driverService.getDriverDashboard().subscribe({
       next: (data: any) => {
-
         this.reviews.set(data?.reviews ?? []);
+
         const availableRide = data?.availableRide ?? null;
 
-        if (availableRide && this.driver().vehicle && availableRide.vehicle && this.driver().vehicle.toLowerCase() === availableRide.vehicle.toLowerCase()
+        if (
+          availableRide &&
+          this.driver().vehicle &&
+          availableRide.vehicle &&
+          this.driver().vehicle.toLowerCase() ===
+            availableRide.vehicle.toLowerCase()
         ) {
           this.availableRide.set(availableRide);
-        } 
-        else {
+        } else {
           this.availableRide.set(null);
         }
 
@@ -138,20 +104,19 @@ export class DriverDashboard implements OnInit, OnDestroy {
           vehicle: data?.driver?.vehicleType ?? '',
           vehicleNo: data?.driver?.vehicleNumber ?? '',
           rating: data?.driver?.rating ?? 0,
-          online: data?.driver?.online ?? true
+          online: data?.driver?.online ?? true,
         }));
 
         this.stats.set({
           trips: data?.stats?.trips ?? 0,
           earnings: data?.stats?.earnings ?? 0,
           distance: data?.stats?.distance ?? 0,
-          hours: data?.stats?.hours ?? 0
+          hours: data?.stats?.hours ?? 0,
         });
-        console.log(this.reviews());
       },
-      error: (err) => {
+      error: err => {
         console.log('dashboard error', err);
-      }
+      },
     });
   }
 
@@ -168,58 +133,44 @@ export class DriverDashboard implements OnInit, OnDestroy {
     this.availableRide.set(matched ? ride : null);
   }
 
-  // getAverageRating(): number {
-  //   const list = this.reviews();
-
-  //   if (!list.length) return 0;
-
-  //   const total = list.reduce((sum, review) => {
-  //     return sum + review.rating;
-  //   }, 0);
-
-  //   return total / list.length;
-  // }
-
   toggleStatus() {
     this.driverService.toggleDriverStatus().subscribe({
       next: () => this.refresh(),
+      error: err => console.log(err),
     });
   }
 
   acceptRide() {
-    this.updateRideStatus(
-      this.availableRide()?._id,
-      (id) => this.driverService.acceptRide(id)
-    );
+    const rideId = this.availableRide()?._id;
+
+    if (!rideId) return;
+
+    this.driverService.acceptRide(rideId).subscribe({
+      error: err => console.log(err),
+    });
   }
 
   startRide() {
-    this.updateRideStatus(
-      this.activeRide()?._id,
-      (id) => this.driverService.startRide(id)
-    );
+    const rideId = this.activeRide()?._id;
+
+    if (!rideId) return;
+
+    this.driverService.startRide(rideId).subscribe({
+      error: err => console.log(err),
+    });
   }
 
   completeRide() {
-    this.updateRideStatus(
-      this.activeRide()?._id,
-      (id) => this.driverService.completeRide(id)
-    );
+    const rideId = this.activeRide()?._id;
+
+    if (!rideId) return;
+
+    this.driverService.completeRide(rideId).subscribe({
+      error: err => console.log(err),
+    });
   }
 
   rejectRide() {
     this.availableRide.set(null);
   }
-
-  updateRideStatus(
-  rideId: string,
-  action: (id: string) => any
-) {
-  if (!rideId) return;
-
-  action(rideId).subscribe({
-    error: (err: any) => console.log(err),
-  });
-}
-
 }

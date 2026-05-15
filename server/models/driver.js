@@ -31,8 +31,8 @@ const driverSchema = new mongoose.Schema({
     required:false
   },
 driverCoordinates: {
-  lat: { type: Number, required: false },
-  lon: { type: Number, required: false }
+  type: [Number],
+  required: false
 }
     
 }, {
