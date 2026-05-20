@@ -9,8 +9,14 @@ const reviewRoutes = require("./routes/reviewRoutes");
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin:'http://localhost:4200',
+  credentials:true
+}));
+
 app.use(express.json());
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 // Routes
 app.use("/auth", authRoutes);

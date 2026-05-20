@@ -86,7 +86,10 @@ exports.login =  async (req, res) => {
       { expiresIn: "7d" }
     );
 
-    return res.status(200).json({
+
+    
+
+    return res.status(200).cookie('token',token).json({
       message: "Login successful",
       token,
       user: {
@@ -100,5 +103,21 @@ exports.login =  async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.logout = async (req, res) => {
+  try {
+  
+    return res
+      .status(200)
+      .clearCookie('token', {
+        httpOnly: true,
+        sameSite: 'lax',
+      })
+      .json({ message: "Logged out successfully" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server error during logout" });
   }
 };

@@ -56,7 +56,7 @@ export class RideRequest {
       })
     )
     .subscribe((res: any) => {
-      this.pickupSuggestions = res || [];
+      this.pickupSuggestions = res;
     });
 
     // Drop Search

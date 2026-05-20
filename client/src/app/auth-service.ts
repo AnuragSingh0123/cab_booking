@@ -19,7 +19,9 @@ export class AuthService {
 
   login(data: any) {
     console.log(data);
-    return this.http.post('http://localhost:7000/auth/login', data);
+    return this.http.post('http://localhost:7000/auth/login', data, {
+      withCredentials:true
+    });
   }
 
   signUp(userData: any) {
@@ -36,16 +38,27 @@ export class AuthService {
   }
 
 
+  // logout() {
+  //   localStorage.removeItem('user');
+  //   localStorage.removeItem('token');
+
+  //   this.user.set(null);
+  //   this.token.set(null);
+  //   this.router.navigate(["/"]);
+  // }
+
   logout() {
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
 
-    this.user.set(null);
-    this.token.set(null);
-``
-    this.router.navigate(["/"]);
+    this.http.post('http://localhost:7000/auth/logout', {}).subscribe({
+      next: (response) => {
+        console.log('Backend cookie cleared successfully');
+        this.router.navigate(["/"]);
+      },
+      error: (err) => {
+        console.error('Logout API failed, clearing local state anyway', err);
+      }
+    });
   }
-
 
   private getUserFromStorage() {
     const u = localStorage.getItem('user');
