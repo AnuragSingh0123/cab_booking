@@ -3,7 +3,6 @@ const Driver = require("../models/driver");
 const User = require("../models/user");
 const Review = require("../models/review");
 
-
 const getDriverDashboard = async (req, res) => {
   try {
     const driver = await Driver.findOne({
@@ -19,6 +18,7 @@ const getDriverDashboard = async (req, res) => {
     const availableRide = await Booking.findOne({
       status: "requested",
       driverId: null,
+      rejectedDrivers: { $nin: [driver._id] },
     }).sort({ createdAt: 1 });
 
     const activeRide = await Booking.findOne({
@@ -47,7 +47,7 @@ const getDriverDashboard = async (req, res) => {
       hours: Number(
         (
           completed.reduce((sum, ride) => sum + (ride.duration || 0), 0) / 60
-        ).toFixed(1)
+        ).toFixed(1),
       ),
     };
 
@@ -65,7 +65,6 @@ const getDriverDashboard = async (req, res) => {
     });
   }
 };
-
 
 const toggleDriverStatus = async (req, res) => {
   try {
@@ -92,20 +91,20 @@ const toggleDriverStatus = async (req, res) => {
   }
 };
 
-
 const updateDriverLocation = async (req, res) => {
   try {
-
     const user = await User.findById(req.user.id);
     const userId = user._id;
 
-    const {place, driverCoordinates} = req.body.data;
+    const { place, driverCoordinates } = req.body.data;
 
     if (place) {
       const updateLocation = await Driver.findOneAndUpdate(
         { userId: userId },
-        { $set: { driverLocation: place , driverCoordinates:driverCoordinates} },
-        { returnDocument: "after" }
+        {
+          $set: { driverLocation: place, driverCoordinates: driverCoordinates },
+        },
+        { returnDocument: "after" },
       );
 
       return res.status(200).json(updateLocation);
@@ -123,23 +122,24 @@ const rejectBooking = async (req, res) => {
 
     const updatedBooking = await Booking.findByIdAndUpdate(
       bookingId,
-      { 
+      {
         $addToSet: { rejectedDrivers: driverId },
       },
-      { new: true }
+      { new: true },
     );
 
     if (!updatedBooking) {
       return res.status(404).json({ message: "Booking not found" });
     }
-    return res.status(200).json({ 
-      success: true, 
+    return res.status(200).json({
+      success: true,
       message: "Ride rejected successfully. Searching for next driver.",
-      booking: updatedBooking 
+      booking: updatedBooking,
     });
-
   } catch (error) {
-    return res.status(500).json({ message: "Server error", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
   }
 };
 
@@ -147,5 +147,5 @@ module.exports = {
   getDriverDashboard,
   toggleDriverStatus,
   updateDriverLocation,
-  rejectBooking
+  rejectBooking,
 };
