@@ -118,28 +118,35 @@ const updateDriverLocation = async (req, res) => {
 };
 const rejectBooking = async (req, res) => {
   try {
-    const { bookingId, driverId } = req.body;
+    const { bookingId } = req.body;
+    const driver = await Driver.findOne({ userId: req.user.id });
 
+    if (!driver) {
+      return res.status(404).json({ message: "Driver not found" });
+    }
+
+    console.log(`Driver ${driver._id} is rejecting booking ${bookingId}`);
     const updatedBooking = await Booking.findByIdAndUpdate(
       bookingId,
-      {
-        $addToSet: { rejectedDrivers: driverId },
+      { 
+        $addToSet: { rejectedDrivers: driver._id },
+        $set: { driverId: null } 
       },
-      { new: true },
+      { new: true }
     );
 
     if (!updatedBooking) {
       return res.status(404).json({ message: "Booking not found" });
     }
-    return res.status(200).json({
-      success: true,
-      message: "Ride rejected successfully. Searching for next driver.",
-      booking: updatedBooking,
+
+    return res.status(200).json({ 
+      success: true, 
+      message: "Ride rejected successfully." 
     });
+
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Server error", error: error.message });
+    console.error("Rejection error:", error);
+    return res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
