@@ -29,13 +29,17 @@ const bookingSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-
+    rejectedDrivers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Driver",
+      }
+    ],
     driverId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Driver",
       default: null,
     },
-
     status: {
       type: String,
       enum: ["requested", "accepted", "started", "completed", "cancelled"],
