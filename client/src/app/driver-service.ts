@@ -67,4 +67,11 @@ export class DriverService {
       }
     );
   }
+  rejectRide(bookingId: string) {
+  return this.http.patch(
+    `${environment.baseUrl}/api/driver/reject`,
+    { bookingId }, 
+    this.getHeaders()
+  );
+}
 }
