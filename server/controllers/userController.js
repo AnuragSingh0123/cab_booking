@@ -13,6 +13,8 @@ const getProfile = async (req, res) => {
     let bookingData = [];
     let driverLocation = null;
 
+    console.log(user);
+
     if (role === "rider") {
       bookingData = await Booking.find({ riderId: id });
     } else if (role === "driver") {
@@ -27,6 +29,8 @@ const getProfile = async (req, res) => {
       (sum, ride) => sum + ride.distance,
       0
     );
+
+    console.log(distanceTravelled)
 
     const totalSpent = bookingData.reduce((sum, ride) => sum + ride.total, 0);
 

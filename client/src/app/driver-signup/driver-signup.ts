@@ -137,7 +137,7 @@ export class DriverSignup {
 
       error: err => {
 
-        this.notify.show(
+        this.notify.show( err.error.message ||
           'Error while registration. Please try again later'
         );
       },

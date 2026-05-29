@@ -26,6 +26,21 @@ exports.signUp = async (req, res) => {
       });
     }
 
+    if (role === "driver") {
+      const existingDriver = await Driver.findOne({
+        $or: [
+          { licenseNumber: licenseNumber },
+          { vehicleNumber: vehicleNumber }
+        ]
+      });
+
+      if (existingDriver) {
+        return res.status(400).json({ 
+          message: "License number or Vehicle number is already registered to another driver." 
+        });
+      }
+    }
+    
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
@@ -52,6 +67,7 @@ exports.signUp = async (req, res) => {
 
 
   } catch (err) {
+    console.error("SignUp Error:", err);
     res.status(500).json({
       message: "Internal Server Error"
     });
